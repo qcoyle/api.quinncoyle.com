@@ -15,7 +15,8 @@ app.set("port", port);
 const booksRouter = require("./routes/books.js");
 
 const corsOptions = {
-    origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
+    origin: "https://quinncoyle.com", // Only allow CORS requests for quinncoyle.com
+    origin: "http://127.0.0.1:3000" // Test server
 }
 
 app.use(cors(corsOptions));
