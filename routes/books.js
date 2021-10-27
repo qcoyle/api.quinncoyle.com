@@ -11,10 +11,10 @@ let books;
 router.use(async(req, res, next) => {
     try {
         books = await readDatabase();
+        next();
     } catch (error) {
         next(error); // For error handling middlware
     }
-    next();
 })
 
 router.get("/", (req, res, next) => {
@@ -32,16 +32,15 @@ router.post("/", jsonParser, async(req, res, next) => {
     };
 
     books.push(body);
-    writeDatabase(books);
-    console.log(books);
+    await writeDatabase(books);
     res.status(201).send(body);
 });
 
-// router.put("/id", (req, res, next) => {
-//     const bookUpdate = req.query;
+router.put("/:id", (req, res, next) => {
+    const bookUpdate = req.query;
 
-//     books.push()
-// });
+    books.push()
+});
 
 const readDatabase = async() => {
     const data = await fsPromise.readFile("./routes/books-database.json").catch((err) => console.error("Failed to read file", err));
@@ -50,7 +49,6 @@ const readDatabase = async() => {
 
 const writeDatabase = async(object) => {
     await fsPromise.writeFile("./routes/books-database.json", JSON.stringify(object)).catch((err) => console.error("Failed to write file", err));
-    console.log("Wrote to database");
 }
 
 const getMaxId = array => {
