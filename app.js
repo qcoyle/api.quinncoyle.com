@@ -18,11 +18,11 @@ app.use(logger("dev"));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs is the export filename
 app.use("/books", booksRouter);
 
-// const corsOptions = {
-//     origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
-// }
+const corsOptions = {
+    origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
+}
 
-app.use(cors);
+app.use(cors(corsOptions));
 
 app.get("/", (req, res, next) => {
     res.send("Please make a request to /books");
