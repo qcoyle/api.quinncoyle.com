@@ -6,18 +6,22 @@ const fsPromise = require("fs").promises;
 
 const jsonParser = bodyParser.json();
 
-router.get("/", async(req, res, next) => {
-    console.log("Request receieved");
+let books;
+
+router.use(async(req, res, next) => {
     try {
-        const books = await readDatabase();
-        console.log(books);
-        res.send(books);
+        books = await readDatabase();
     } catch (error) {
         next(error); // For error handling middlware
     }
+    next();
+})
+
+router.get("/", (req, res, next) => {
+    res.send(books);
 });
 
-router.post("/", jsonParser, (req, res, next) => {
+router.post("/", jsonParser, async(req, res, next) => {
     const idObj = {
         id: getMaxId(books) + 1
     };
@@ -26,8 +30,10 @@ router.post("/", jsonParser, (req, res, next) => {
         ...idObj,
         ...req.body
     };
+
     books.push(body);
-    writeDatabase;
+    writeDatabase(books);
+    console.log(books);
     res.status(201).send(body);
 });
 
@@ -42,11 +48,9 @@ const readDatabase = async() => {
     return JSON.parse(data);
 }
 
-const writeDatabase = () => {
-    fs.writeFile("./routes/books-database.json"), JSON.stringify(books), err => {
-        if (err) throw err;
-        console.log("Wrote to database");
-    }
+const writeDatabase = async(object) => {
+    await fsPromise.writeFile("./routes/books-database.json", JSON.stringify(object)).catch((err) => console.error("Failed to write file", err));
+    console.log("Wrote to database");
 }
 
 const getMaxId = array => {
