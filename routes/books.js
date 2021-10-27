@@ -22,17 +22,29 @@ router.use(async(req, res, next) => {
 })
 
 router.get("/", (req, res, next) => {
+    res.send("Please make a request to /books");
+});
+
+router.get("/books", (req, res, next) => {
+    /* 	#swagger.tags = ['Book']
+        #swagger.description = 'See all books' */
+
     res.send(books);
 });
 
-router.post("/", jsonParser, async(req, res, next) => {
+router.post("/books", jsonParser, async(req, res, next) => {
+    /* 	#swagger.tags = ['Book']
+        #swagger.description = 'Add a book' */
+
     const book = createObjectWithID(getNewId(books), req.body);
     books.push(book);
     await writeDatabase(books);
     res.status(201).send(book);
 });
 
-router.put("/:id", jsonParser, async(req, res, next) => {
+router.put("books/:id", jsonParser, async(req, res, next) => {
+    /* 	#swagger.tags = ['Book']
+        #swagger.description = 'Modify a book' */
     const book = createObjectWithID(req.params.id, req.body);
 
     books[getIndexByInnerObjectId(req.params.id, books)] = book; // Make the update
@@ -40,7 +52,9 @@ router.put("/:id", jsonParser, async(req, res, next) => {
     res.status(204).send(book);
 });
 
-router.delete("/:id", async(req, res, next) => {
+router.delete("books/:id", async(req, res, next) => {
+    /* 	#swagger.tags = ['Book']
+        #swagger.description = 'Delete a book' */
     const deleteIndex = getIndexByInnerObjectId(req.params.id, books); // Index of the array for update
     if (deleteIndex !== -1) {
         books.splice(deleteIndex, 1); // Remove from array at index

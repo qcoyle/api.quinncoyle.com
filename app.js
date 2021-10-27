@@ -23,20 +23,14 @@ app.use(cors(corsOptions));
 
 app.use(logger("dev"));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs is the export filename
-app.use("/books", booksRouter);
-
-
-
-app.get("/", (req, res, next) => {
-    res.send("Please make a request to /books");
-});
+app.use(booksRouter);
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port }`);
 });
 
 function normalizePort(val) {
-    var port = parseInt(val, 10);
+    const port = parseInt(val, 10);
 
     if (isNaN(port)) {
         // named pipe
