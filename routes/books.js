@@ -2,11 +2,11 @@
 
 const router = require("express").Router();
 const bodyParser = require("body-parser");
-const readDatabase = require("./utils").readDatabase;
-const createObjectWithID = require("./utils").createObjectWithID;
-const getNewId = require("./utils").getNewId;
-const writeDatabase = require("./utils").writeDatabase;
-const getIndexByInnerObjectId = require("./utils").getIndexByInnerObjectId;
+const readDatabase = require("../utils/db.js").readDatabase;
+const writeDatabase = require("../utils/db.js").writeDatabase;
+const createObjectWithID = require("../utils/helpers.js").createObjectWithId;
+const getNewId = require("../utils/helpers.js").getNewId;
+const getIndexByInnerObjectId = require("../utils/helpers.js").getIndexByInnerObjectId;
 
 const jsonParser = bodyParser.json();
 
