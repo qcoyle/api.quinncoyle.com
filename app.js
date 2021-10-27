@@ -18,7 +18,7 @@ const corsOptions = {
     origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
 }
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(logger("dev"));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs is the export filename
