@@ -5,7 +5,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const app = express();
 
-const port = normalizePort(process.env.PORT || "5501");
+const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 const booksRouter = require("./routes/books.js");
