@@ -15,12 +15,11 @@ app.set("port", port);
 const booksRouter = require("./routes/books.js");
 
 const corsOptions = {
-    origin: "https://quinncoyle.com", // Only allow CORS requests for quinncoyle.com
-    origin: "http://127.0.0.1:3000" // Test server
+    origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
+        // origin: "http://127.0.0.1:3000" // Test server
 }
 
 app.use(cors(corsOptions));
-
 app.use(logger("dev"));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs is the export filename
 app.use(booksRouter);
