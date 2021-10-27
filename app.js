@@ -3,6 +3,10 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors"); // To allow AJAX requests from Javascript
+const swaggerUi = require('swagger-ui-express'); // https://medium.com/swlh/automatic-api-documentation-in-node-js-using-swagger-dd1ab3c78284
+const swaggerFile = require('./swagger-output.json');
+
+
 const app = express();
 
 const port = normalizePort(process.env.PORT || "3000");
@@ -11,10 +15,11 @@ app.set("port", port);
 const booksRouter = require("./routes/books.js");
 
 app.use(logger("dev"));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs is the export filename
 app.use("/books", booksRouter);
 
 const corsOptions = {
-    // origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
+    origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
 }
 
 app.use(cors(corsOptions));
