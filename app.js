@@ -6,17 +6,22 @@ const cors = require("cors"); // To allow AJAX requests from Javascript
 const swaggerUi = require('swagger-ui-express'); // https://medium.com/swlh/automatic-api-documentation-in-node-js-using-swagger-dd1ab3c78284
 const swaggerFile = require('./swagger-output.json');
 
-
 const app = express();
 
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 const booksRouter = require("./routes/books.js");
+const whitelist = require("./cors-whitelist.json");
 
 const corsOptions = {
-    origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
-        // origin: "http://127.0.0.1:3000" // Test server
+    origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    }
 }
 
 app.use(cors(corsOptions));
