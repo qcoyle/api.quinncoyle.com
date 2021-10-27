@@ -10,21 +10,9 @@ const app = express();
 
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
-
 const booksRouter = require("./routes/books.js");
-const whitelist = require("./cors-whitelist.json");
 
-const corsOptions = {
-    origin: function(origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    }
-}
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(logger("dev"));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile)); // docs is the export filename
 app.use(booksRouter);
