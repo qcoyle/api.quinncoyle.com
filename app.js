@@ -13,9 +13,8 @@ app.use("/books", booksRouter);
 app.use(logger("dev"));
 
 app.get("/", (req, res, next) => {
-    console.log("Get request to main program");
-    res.send("This is a test!");
-})
+    res.send("Please make a request to /books");
+});
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port }`);

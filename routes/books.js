@@ -1,13 +1,10 @@
 const router = require("express").Router();
 
-const obj = {
-    title: "Hello world",
-    author: "Hola mundial"
-}
+const data = require("./books-database.json");
 
 router.get("/", (req, res, next) => {
     console.log("Get request received");
-    res.json(obj);
+    res.json(data);
 });
 
 module.exports = router;
