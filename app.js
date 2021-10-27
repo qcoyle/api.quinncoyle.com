@@ -14,7 +14,7 @@ app.use(logger("dev"));
 
 app.get("/", (req, res, next) => {
     console.log("Get request to main program");
-    res.send("This is a test");
+    res.send("This is a test!");
 })
 
 app.listen(port, () => {
