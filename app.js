@@ -9,8 +9,8 @@ app.set("port", port);
 
 const booksRouter = require("./routes/books.js");
 
-app.use("/books", booksRouter);
 app.use(logger("dev"));
+app.use("/books", booksRouter);
 
 app.get("/", (req, res, next) => {
     res.send("Please make a request to /books");
