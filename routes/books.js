@@ -22,24 +22,33 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/", jsonParser, async(req, res, next) => {
-    const idObj = {
+    const newId = {
         id: getMaxId(books) + 1
     };
 
-    const body = {
-        ...idObj,
+    const book = {
+        ...newId,
         ...req.body
     };
 
-    books.push(body);
+    books.push(book);
     await writeDatabase(books);
-    res.status(201).send(body);
+    res.status(201).send(book);
 });
 
-router.put("/:id", (req, res, next) => {
-    const bookUpdate = req.query;
+router.put("/:id", jsonParser, async(req, res, next) => {
+    const id = parseInt(req.params.id);
+    const bookUpdate = req.body;
+    const changeIndex = books.map(x => x.id).indexOf(id);
 
-    books.push()
+    const body = {
+        ... { id: id },
+        ...req.body
+    }
+
+    books[changeIndex] = body; // Make the update
+    await writeDatabase(books);
+    res.status(204).send(body);
 });
 
 const readDatabase = async() => {
