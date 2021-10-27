@@ -16,6 +16,4 @@ const getIndexByInnerObjectId = (id, array) => {
     return array.map(x => x.id).indexOf(id);
 }
 
-console.log(getNewId());
-
 module.exports = { createObjectWithId, getNewId, getIndexByInnerObjectId };
