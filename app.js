@@ -22,7 +22,7 @@ const corsOptions = {
     origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
 }
 
-app.use(cors(corsOptions));
+app.use(cors);
 
 app.get("/", (req, res, next) => {
     res.send("Please make a request to /books");
