@@ -14,7 +14,7 @@ app.use(logger("dev"));
 app.use("/books", booksRouter);
 
 const corsOptions = {
-    origin: "https://quinncoyle.com"
+    // origin: "https://quinncoyle.com" // Only allow CORS requests for quinncoyle.com
 }
 
 app.use(cors(corsOptions));
