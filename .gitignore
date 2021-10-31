@@ -104,3 +104,6 @@ dist
 .tern-port
 
 .DS_Store
+
+# Not best practice
+database.json
