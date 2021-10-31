@@ -32,6 +32,19 @@ router.get("/books", (req, res, next) => {
     res.send(books);
 });
 
+router.get("/books:id", (req, res, next) => {
+    /* 	#swagger.tags = ['Book']
+        #swagger.description = 'Get book by id' */
+
+    idInt = parseInt(req.params.id); // Id to integer
+    const index = books.map(x => x.id).indexOf(idInt)
+    if (index !== -1) {
+        res.status(204).send(books[index]);
+    } else {
+        res.status(404).send();
+    }
+});
+
 router.post("/books", jsonParser, async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Add a book' */
