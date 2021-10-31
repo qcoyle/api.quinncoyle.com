@@ -9,7 +9,7 @@ const createObjectWithId = (id, body) => {
 }
 
 const getNewId = () => {
-    return crypto.randomBytes(3).toString('hex'); // Random string
+    return Date.now(); // Simple unique id
 }
 
 const getIndexByInnerObjectId = (id, array) => {
