@@ -22,7 +22,7 @@ router.use(async(req, res, next) => {
 })
 
 router.get("/", (req, res, next) => {
-    res.send("Please make a request to /books");
+    res.send("Please make a request to an endpoint in api.quinncoyle.com/docs");
 });
 
 router.get("/books", (req, res, next) => {
