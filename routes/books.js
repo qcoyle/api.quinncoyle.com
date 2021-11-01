@@ -32,7 +32,7 @@ router.get("/books", (req, res, next) => {
     res.send(books);
 });
 
-router.get("/books:id", (req, res, next) => {
+router.get("/books/:id", (req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Get book by id' */
 
