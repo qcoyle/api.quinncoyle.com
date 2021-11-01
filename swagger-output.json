@@ -53,7 +53,7 @@
         }
       }
     },
-    "/{booksid}": {
+    "/books/{id}": {
       "get": {
         "tags": [
           "Book"
@@ -61,7 +61,7 @@
         "description": "Get book by id",
         "parameters": [
           {
-            "name": "booksid",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
