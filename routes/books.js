@@ -8,10 +8,17 @@ const createObjectWithID = require("../utils/helpers.js").createObjectWithId;
 const getNewId = require("../utils/helpers.js").getNewId;
 const getIndexByInnerObjectId = require("../utils/helpers.js").getIndexByInnerObjectId;
 
+const uri = "mongodb+srv://quinn:gru@cluster0.wqwjw.mongodb.net/apiquinncoylecom?retryWrites=true&w=majority";
+const MongoClient = require("mongodb").MongoClient;
+const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+const collection = client.db("apiquinncoylecom").collection("books");
+
 const jsonParser = bodyParser.json();
 
 let books;
-
 router.use(async(req, res, next) => {
     try {
         books = await readDatabase();
@@ -25,11 +32,18 @@ router.get("/", (req, res, next) => {
     res.send("Please make a request to an endpoint in api.quinncoyle.com/docs");
 });
 
-router.get("/books", (req, res, next) => {
+router.get("/books", async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'See all books' */
 
-    res.send(books);
+    try {
+        client.connect(async(err) => {
+            res.send(await collection.find({}).toArray());
+            client.close();
+        })
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 router.get("/books/:id", (req, res, next) => {
@@ -49,10 +63,20 @@ router.post("/books", jsonParser, async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Add a book' */
 
-    const book = createObjectWithID(getNewId(books), req.body);
-    books.push(book);
-    await writeDatabase(books);
-    res.status(201).send(book);
+    // const book = createObjectWithID(getNewId(books), req.body);
+    // books.push(book);
+    // await writeDatabase(books);
+
+    const books = req.body;
+    try {
+        client.connect(async(err) => {
+            await collection.insertMany(books);
+            res.status(201).send(books);
+            client.close();
+        })
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 router.put("books/:id", jsonParser, async(req, res, next) => {
@@ -65,16 +89,28 @@ router.put("books/:id", jsonParser, async(req, res, next) => {
     res.status(204).send(book);
 });
 
-router.delete("books/:id", async(req, res, next) => {
+router.delete("/books", async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Delete a book' */
-    const deleteIndex = getIndexByInnerObjectId(req.params.id, books); // Index of the array for update
-    if (deleteIndex !== -1) {
-        books.splice(deleteIndex, 1); // Remove from array at index
-        await writeDatabase(books);
-        res.status(204).send();
-    } else {
-        res.status(404).send();
+    // const deleteIndex = getIndexByInnerObjectId(req.params.id, books); // Index of the array for update
+    // if (deleteIndex !== -1) {
+    //     books.splice(deleteIndex, 1); // Remove from array at index
+    //     await writeDatabase(books);
+    //     res.status(204).send();
+    // } else {
+    //     res.status(404).send();
+    // }
+
+    try {
+        client.connect(async(err) => {
+            let myQuery = { id: [0 - 9] }
+
+            await collection.deleteMany(myQuery);
+            res.status(204).send();
+            client.close();
+        })
+    } catch (error) {
+        console.log(error);
     }
 });
 
