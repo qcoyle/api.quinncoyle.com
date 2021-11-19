@@ -9,7 +9,7 @@ const getNewId = require("../utils/helpers.js").getNewId;
 const getIndexByInnerObjectId = require("../utils/helpers.js").getIndexByInnerObjectId;
 
 const uri = "mongodb+srv://quinn:gru@cluster0.wqwjw.mongodb.net/apiquinncoylecom?retryWrites=true&w=majority";
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -53,12 +53,27 @@ router.get("/books/:id", (req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Get book by id' */
 
-    idInt = parseInt(req.params.id); // Id to integer
-    const index = books.map(x => x.id).indexOf(idInt)
-    if (index !== -1) {
-        res.status(204).send(books[index]);
-    } else {
-        res.status(404).send();
+    // idInt = parseInt(req.params.id); // Id to integer
+    // const index = books.map(x => x.id).indexOf(idInt)
+    // if (index !== -1) {
+    //     res.status(204).send(books[index]);
+    // } else {
+    //     res.status(404).send();
+    // }
+
+    const id = req.params.id;
+    console.log(typeof(id));
+    const objectId = new ObjectId(id);
+    try {
+        client.connect(async(err) => {
+            if (err) {
+                console.log(err);
+            }
+            res.send(await collection.find({ _id: ObjectId(id) }).toArray());
+            client.close();
+        })
+    } catch (error) {
+        console.log(error);
     }
 });
 
