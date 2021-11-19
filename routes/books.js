@@ -14,14 +14,14 @@ const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
-const collection = client.db("apiquinncoylecom").collection("books");
+let collection;
 
 const jsonParser = bodyParser.json();
 
 let books;
 router.use(async(req, res, next) => {
     try {
-        books = await readDatabase();
+        collection = client.db("apiquinncoylecom").collection("books");
         next();
     } catch (error) {
         next(error); // For error handling middlware
