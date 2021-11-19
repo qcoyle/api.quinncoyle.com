@@ -41,7 +41,7 @@ router.get("/books", async(req, res, next) => {
             if (err) {
                 console.log(err);
             }
-            res.send(await collection.find({}).toArray());
+            res.send(await collection.find().sort({ read_date: -1 }).toArray());
             client.close();
         })
     } catch (error) {
@@ -52,14 +52,6 @@ router.get("/books", async(req, res, next) => {
 router.get("/books/:id", (req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Get book by id' */
-
-    // idInt = parseInt(req.params.id); // Id to integer
-    // const index = books.map(x => x.id).indexOf(idInt)
-    // if (index !== -1) {
-    //     res.status(204).send(books[index]);
-    // } else {
-    //     res.status(404).send();
-    // }
 
     const id = req.params.id;
     console.log(typeof(id));
@@ -81,10 +73,6 @@ router.post("/books", jsonParser, async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Add a book' */
 
-    // const book = createObjectWithID(getNewId(books), req.body);
-    // books.push(book);
-    // await writeDatabase(books);
-
     const books = req.body;
     try {
         client.connect(async(err) => {
@@ -100,11 +88,11 @@ router.post("/books", jsonParser, async(req, res, next) => {
 router.put("books/:id", jsonParser, async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Modify a book' */
-    const book = createObjectWithID(req.params.id, req.body);
+    // const book = createObjectWithID(req.params.id, req.body);
 
-    books[getIndexByInnerObjectId(req.params.id, books)] = book; // Make the update
-    await writeDatabase(books);
-    res.status(204).send(book);
+    // books[getIndexByInnerObjectId(req.params.id, books)] = book; // Make the update
+    // await writeDatabase(books);
+    // res.status(204).send(book);
 });
 
 router.delete("/books", async(req, res, next) => {
