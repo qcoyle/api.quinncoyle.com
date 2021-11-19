@@ -51,18 +51,6 @@
             "description": "Created"
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "Book"
-        ],
-        "description": "Delete a book",
-        "parameters": [],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
       }
     },
     "/books/{id}": {
@@ -80,9 +68,7 @@
           }
         ],
         "responses": {}
-      }
-    },
-    "books/{id}": {
+      },
       "put": {
         "tags": [
           "Book"
@@ -96,7 +82,30 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "description": "Delete a book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     }
   },

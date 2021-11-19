@@ -1,12 +1,7 @@
 "use strict";
 
 const router = require("express").Router();
-const bodyParser = require("body-parser");
-const readDatabase = require("../utils/db.js").readDatabase;
-const writeDatabase = require("../utils/db.js").writeDatabase;
-const createObjectWithID = require("../utils/helpers.js").createObjectWithId;
-const getNewId = require("../utils/helpers.js").getNewId;
-const getIndexByInnerObjectId = require("../utils/helpers.js").getIndexByInnerObjectId;
+const jsonParser = require("body-parser").json();
 
 const uri = "mongodb+srv://quinn:gru@cluster0.wqwjw.mongodb.net/apiquinncoylecom?retryWrites=true&w=majority";
 const { MongoClient, ObjectId } = require("mongodb");
@@ -16,9 +11,6 @@ const client = new MongoClient(uri, {
 });
 let collection;
 
-const jsonParser = bodyParser.json();
-
-let books;
 router.use(async(req, res, next) => {
     try {
         collection = client.db("apiquinncoylecom").collection("books");
@@ -26,7 +18,7 @@ router.use(async(req, res, next) => {
     } catch (error) {
         next(error); // For error handling middlware
     }
-})
+});
 
 router.get("/", (req, res, next) => {
     res.send("Please make a request to an endpoint in api.quinncoyle.com/docs");
@@ -37,35 +29,26 @@ router.get("/books", async(req, res, next) => {
         #swagger.description = 'See all books' */
 
     try {
-        client.connect(async(err) => {
-            if (err) {
-                console.log(err);
-            }
-            res.send(await collection.find().sort({ read_date: -1 }).toArray());
-            client.close();
-        })
-    } catch (error) {
-        console.log(error);
+        await client.connect();
+
+        res.send(await collection.find().sort({ read_date: -1 }).toArray()); // Sends sorted from newest to oldest
+    } finally {
+        await client.close();
     }
 });
 
-router.get("/books/:id", (req, res, next) => {
+router.get("/books/:id", async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Get book by id' */
 
-    const id = req.params.id;
-    console.log(typeof(id));
-    const objectId = new ObjectId(id);
     try {
-        client.connect(async(err) => {
-            if (err) {
-                console.log(err);
-            }
-            res.send(await collection.find({ _id: ObjectId(id) }).toArray());
-            client.close();
-        })
-    } catch (error) {
-        console.log(error);
+        await client.connect();
+
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        res.send(await collection.find(query).toArray());
+    } finally {
+        await client.close();
     }
 });
 
@@ -73,50 +56,50 @@ router.post("/books", jsonParser, async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Add a book' */
 
-    const books = req.body;
     try {
-        client.connect(async(err) => {
-            await collection.insertMany(books);
-            res.status(201).send(books);
-            client.close();
-        })
-    } catch (error) {
-        console.log(error);
+        await client.connect();
+
+        const result = await collection.insertMany(req.body);
+        console.log(`Modified ${result.modifiedCount} document(s)`);
+        res.status(201).send(req.body);
+    } finally {
+        await client.close();
     }
 });
 
-router.put("books/:id", jsonParser, async(req, res, next) => {
+router.put("/books/:id", jsonParser, async(req, res, next) => {
     /* 	#swagger.tags = ['Book']
         #swagger.description = 'Modify a book' */
-    // const book = createObjectWithID(req.params.id, req.body);
-
-    // books[getIndexByInnerObjectId(req.params.id, books)] = book; // Make the update
-    // await writeDatabase(books);
-    // res.status(204).send(book);
-});
-
-router.delete("/books", async(req, res, next) => {
-    /* 	#swagger.tags = ['Book']
-        #swagger.description = 'Delete a book' */
-    // const deleteIndex = getIndexByInnerObjectId(req.params.id, books); // Index of the array for update
-    // if (deleteIndex !== -1) {
-    //     books.splice(deleteIndex, 1); // Remove from array at index
-    //     await writeDatabase(books);
-    //     res.status(204).send();
-    // } else {
-    //     res.status(404).send();
-    // }
 
     try {
-        client.connect(async(err) => {
-            let myQuery = { id: [0 - 9] }
+        await client.connect();
 
-            await collection.deleteMany(myQuery);
-            res.status(204).send();
-            client.close();
-        })
-    } catch (error) {
-        console.log(error);
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const replacement = req.body;
+
+        const result = await collection.replaceOne(query, replacement);
+        console.log(`Modified ${result.modifiedCount} document(s)`);
+        res.status(204).send();
+        client.close();
+    } finally {
+        await client.close();
+    }
+});
+
+router.delete("/books/:id", async(req, res, next) => {
+    /* 	#swagger.tags = ['Book']
+        #swagger.description = 'Delete a book' */
+
+    try {
+        await client.connect();
+
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await collection.deleteOne(query);
+        res.status(204).send();
+    } finally {
+        await client.close();
     }
 });
 
