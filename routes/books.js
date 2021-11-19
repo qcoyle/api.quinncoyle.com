@@ -9,7 +9,7 @@ const getNewId = require("../utils/helpers.js").getNewId;
 const getIndexByInnerObjectId = require("../utils/helpers.js").getIndexByInnerObjectId;
 
 const uri = "mongodb+srv://quinn:gru@cluster0.wqwjw.mongodb.net/apiquinncoylecom?retryWrites=true&w=majority";
-const MongoClient = require("mongodb").MongoClient;
+const { MongoClient } = require("mongodb");
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -38,6 +38,9 @@ router.get("/books", async(req, res, next) => {
 
     try {
         client.connect(async(err) => {
+            if (err) {
+                console.log(err);
+            }
             res.send(await collection.find({}).toArray());
             client.close();
         })
