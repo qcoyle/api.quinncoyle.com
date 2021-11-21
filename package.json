@@ -24,6 +24,7 @@
         "express": "^4.17.1",
         "mongodb": "^4.2.0",
         "morgan": "^1.10.0",
+        "newrelic": "^8.6.0",
         "nodemon": "^2.0.14",
         "swagger-autogen": "^2.12.4",
         "swagger-ui-express": "^4.1.6"

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require('newrelic'); // Diagnostics
+
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors"); // To allow AJAX requests from Javascript
