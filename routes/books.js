@@ -59,7 +59,7 @@ router.post("/books", jsonParser, async(req, res, next) => {
     try {
         await client.connect();
 
-        const result = await collection.insertMany(req.body);
+        const result = await collection.insertOne(req.body);
         console.log(`Modified ${result.modifiedCount} document(s)`);
         res.status(201).send(req.body);
     } finally {
